@@ -34,32 +34,44 @@ public class SocialMediaController {
     AccountService accountService;
     MessageService messageService;
 
+    // AllArgsConstructor for our controller. Service dependencies injected via Spring.
     @Autowired
     public SocialMediaController(AccountService accountService, MessageService messageService){
         this.accountService = accountService;
         this.messageService = messageService;
     }
 
+    // Handler for User Story 1
+    // Our API should be able to process new User registrations.
     @PostMapping("/register")
     public ResponseEntity<Account> addAccountHandler(@RequestBody Account account){
         return ResponseEntity.ok().body(accountService.addAccount(account));
     }
 
+    // Handler for User Story 2
+    // Our API should be able to process User logins.
     @PostMapping("/login")
     public ResponseEntity<Account> loginHandler(@RequestBody Account account){
         return ResponseEntity.ok().body(accountService.login(account));
     }
 
+    // Handler for User Story 3
+    // Our API should be able to process the creation of new messages.
     @PostMapping("/messages")
     public ResponseEntity<Message> createMessageHandler(@RequestBody Message message){
         return ResponseEntity.ok().body(messageService.createMessage(message));
     }
 
+    // Handler for User Story 4
+    // Our API should be able to retrieve all messages.
     @GetMapping("/messages")
     public ResponseEntity<List<Message>> getAllMessagesHandler(){
         return ResponseEntity.ok().body(messageService.getAllMessages());
     }
     
+    // Handler for User Story 5
+    // Our API should be able to retrieve a message by its ID.
+    // Includes conditional logic to send successful response with empty body if the message isn't found.
     @GetMapping("/messages/{id}")
     public ResponseEntity<Message> getMessageByIdHandler(@PathVariable int id){
         Optional<Message> optionalMessage = messageService.getMessageById(id);
@@ -69,6 +81,9 @@ public class SocialMediaController {
         return ResponseEntity.ok().build();
     }
 
+    // Handler for User Story 6
+    // Our API should be able to delete a message identified by a message ID.
+    // Includes conditional logic to send successful response with empty body if the message isn't found.
     @DeleteMapping("/messages/{id}")
     public ResponseEntity<Integer> deleteMessageByIdHandler(@PathVariable int id){
         int rowsAffected = messageService.deleteMessageById(id);
@@ -78,11 +93,15 @@ public class SocialMediaController {
         return ResponseEntity.ok().build();
     }
     
+    // Handler for User Story 7
+    // Our API should be able to update a message text identified by a message ID.
     @PatchMapping("/messages/{id}")
     public ResponseEntity<Integer> updateMessageByIdHandler(@PathVariable int id, @RequestBody Message message){
         return ResponseEntity.ok().body(messageService.updateMessageById(id, message));
     }
 
+    // Handler for User Story 8
+    // Our API should be able to retrieve all messages written by a particular user.
     @GetMapping("/accounts/{accountId}/messages")
     public ResponseEntity<List<Message>> getAllMessagesByUserHandler(@PathVariable int accountId){
         return ResponseEntity.ok(messageService.getAllMessagesByUser(accountId));
